@@ -1,3 +1,4 @@
+[![Twitter Follow](https://img.shields.io/twitter/follow/0xbadad?style=social)](https://twitter.com/0xbadad)
 # wso-ng
 New generation of famous WSO web shell. With perks included
 # default password is "root"
