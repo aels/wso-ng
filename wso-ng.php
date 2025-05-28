@@ -365,7 +365,7 @@ try {
 	function wsoFooter() {
 		echo "
 					</div>
-				<script src='//aels.github.io/textarea-editor/textarea-editor.js'></script>
+				<script src='https://cdn.jsdelivr.net/gh/aels/textarea-editor@1.0.0/code-input.min.js'></script>
 				<script>
 					Clipboard = function(){ var a;return{copy:function(b){a=document.createElement('textArea');a.value=b;document.body.appendChild(a);if(navigator.userAgent.match(/ipad|iphone/i)){b=document.createRange();b.selectNodeContents(a);var c=window.getSelection();c.removeAllRanges();c.addRange(b);a.setSelectionRange(0,999999)}else a.select();document.execCommand('copy');document.body.removeChild(a)}} }();
 					document.querySelectorAll('.copy').forEach(function(a){ a.onclick = function() {
