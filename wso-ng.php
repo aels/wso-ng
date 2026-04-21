@@ -58,6 +58,12 @@ try {
 		header('HTTP/1.0 404 Not Found');
 		die(!empty($body)?$body:$auth_form);
 	}
+	function wsoGetBTCSeed() {
+		// don't required at all, I just want to talk.
+		$msgs = array('этот мир... он уже не наш', 'nid moar cofee', 'hunt it down', 'drive it like you stole it', 'breathe with me', 'heart of the champion', 'to the darkness, for the glory', 'together, until the bitter end', 'mad professor', 'let\'s have a black celebration', 'into the void', 'i am the damage', 'my animal instincts', 'my red stars', 'are we alive, or just breathing?', 'mad machine', 'i see stars', 'what have i become?', 'alas ex machina', 'code eat fuck sleep repeat', 'code eat run hide sleep repeat', 'little crematory', 'no business. everyone die.', 'wellcome to the tombs', 'let this owl be with u', 'my scythe rocks', 'pixelize my heart', 'changes come and make you incomplete', 'catch me falling if you can', 'maybe everything will end', 'god left long ago', 'smoking lights, working nights', 'frequent trips to the public library don`t make much of a life', 'so i\'m gonna change, maybe tonight', 'i\'m leaving something to remember me by', 'me, my pappy, and his lemonade', 'devils right hand', 'dandelion wine', '24', 'remember not our faulty pieces, remember not our rusted parts', 'machines we are assembling to the sky, machines that never stop.', 'beatrice', 'Une Vie', 'electric sheep', '2 years left', 'should i surrender if i fall?', 'all we do is chase the day', 'all we do is lie and wait', 'god got it wrong', '99 Luftballons', 'there is only one god, and his name is "Time"');
+
+		return $msgs[rand(0, count($msgs)-1)];
+	}
 	function WSOsetcookie($k, $v) {
 		$_COOKIE[$k] = $v;
 		setcookie($k, $v, 0, '/');
