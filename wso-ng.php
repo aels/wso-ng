@@ -325,7 +325,7 @@ try {
 			});
 		}
 	</script>
-	<head><body><div style='position:absolute;width:100%;background-color:#444;top:0;left:0;'>
+	<head><body><div style='position:absolute;width:100%;z-index:1000000;background-color:#444;top:0;left:0;'>
 	<form method=post name=mf style='display:none;'>
 	<input type=hidden name=a>
 	<input type=hidden name=c>
