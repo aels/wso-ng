@@ -36,6 +36,8 @@ try {
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 				curl_setopt($ch, CURLOPT_HEADER, FALSE);
 				curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (compatible;)");
+				curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 				$body = curl_exec($ch);
 				curl_close($ch);
 			}
